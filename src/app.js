@@ -4,7 +4,6 @@
 import { d2Get } from "./js/d2api.js";
 
 //CSS
-import "./css/header.css";
 import "./css/style.css";
 
 //Test setup by calling API

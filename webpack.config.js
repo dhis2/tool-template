@@ -7,7 +7,7 @@ const HTMLWebpackPlugin = require("html-webpack-plugin");
 
 var dhisConfig;
 try {
-    dhisConfig = require("./d2auth.json"); // eslint-disable-line
+    dhisConfig = require("./d2auth.json");  
     dhisConfig.authorization = `Basic ${Buffer.from(`${dhisConfig.username}:${dhisConfig.password}`).toString("base64")}`;
 } catch (e) {
     console.warn("\nWARNING! Failed to load DHIS config:", e.message);
@@ -21,14 +21,14 @@ const devServerPort = 8081;
 const isDevBuild = process.argv[1].indexOf("webpack-dev-server") !== -1;
 
 
-let cookie = ''; // Store cookie globally
+let cookie = ""; // Store cookie globally
 async function fetchSessionCookie() {
     try {
-        const response = await fetch(dhisConfig.baseUrl + '/api/me', {
+        const response = await fetch(dhisConfig.baseUrl + "/api/me", {
             headers: {
                 "Authorization": dhisConfig.authorization
             },
-            credentials: 'include'
+            credentials: "include"
         });
 
         if (!response.ok) {
@@ -36,11 +36,11 @@ async function fetchSessionCookie() {
         }
 
         // Extract and store JSESSIONID from the Set-Cookie header
-        const setCookieHeader = response.headers.get('set-cookie');
+        const setCookieHeader = response.headers.get("set-cookie");
         if (setCookieHeader) {
-            const jsessionIdCookie = setCookieHeader.split(',').find(header => header.includes('JSESSIONID'));
+            const jsessionIdCookie = setCookieHeader.split(",").find(header => header.includes("JSESSIONID"));
             if (jsessionIdCookie) {
-                cookie = jsessionIdCookie.split(';')[0]; // Get only the `JSESSIONID=value` part
+                cookie = jsessionIdCookie.split(";")[0]; // Get only the `JSESSIONID=value` part
                 console.log("JSESSIONID cookie successfully set:", cookie);
             }
         }
@@ -141,24 +141,23 @@ const webpackConfig = {
                 },
                 onProxyReq: (proxyReq) => {
                     if (cookie) {
-                        proxyReq.setHeader('Cookie', cookie);
+                        proxyReq.setHeader("Cookie", cookie);
                     } else {
                         console.warn("No cookie found");
                     }
                 },
                 onProxyRes: (proxyRes) => {
-                    const setCookieHeader = proxyRes.headers['set-cookie'];
+                    const setCookieHeader = proxyRes.headers["set-cookie"];
                     if (setCookieHeader) {
-                        const jsessionIdCookie = setCookieHeader.find(header => header.includes('JSESSIONID'));
+                        const jsessionIdCookie = setCookieHeader.find(header => header.includes("JSESSIONID"));
                         if (jsessionIdCookie) {
-                            cookie = jsessionIdCookie.split(';')[0];
+                            cookie = jsessionIdCookie.split(";")[0];
                         }
                     }
                 }
             }
         ]
-    }
-    ,
+    },
     mode: "development"
 };
 
