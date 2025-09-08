@@ -2,6 +2,8 @@
 
 //JS
 import { d2Get } from "./js/d2api.js";
+import { loadLegacyHeaderBarIfNeeded } from "./js/check-header-bar.js";
+loadLegacyHeaderBarIfNeeded();
 
 //CSS
 import "./css/style.css";
